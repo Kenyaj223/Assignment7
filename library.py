@@ -53,3 +53,18 @@ for book in results:
     print(book[0], "-", book[1])
 
 conn.close() 
+
+
+
+print("\nFiction books with more than 2 copies:")
+
+cursor.execute(
+    "SELECT title FROM books WHERE genre = ? AND copies > ?",
+    ("Fiction", 2)
+)
+
+results = cursor.fetchall()
+
+for book in results:
+    print(book[0])
+
