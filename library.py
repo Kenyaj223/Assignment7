@@ -1,10 +1,13 @@
 # library database program
 
+# library database program
+
 import sqlite3
 
 conn = sqlite3.connect("library.db")
 cursor = conn.cursor()
-cursor.execute("DROP TABLE IS EXISTS books")
+
+cursor.execute("DROP TABLE IF EXISTS books")
 
 cursor.execute("""
   CREATE TABLE books (
@@ -14,13 +17,13 @@ cursor.execute("""
   year INTEGER,
   genre TEXT,
   copies INTEGER,
-  RATING INTEGER,
-)
+  rating INTEGER
+  )
 """)
 
 cursor.execute(
-"INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?,)"
-(1, "The Hobbit", "J.R.R. Tolkien", 1937, "Fantasy", 4, 5)
+    "INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?)",
+    (1, "The Hobbit", "J.R.R. Tolkien", 1937, "Fantasy", 4, 5)
 )
 
 books = [
@@ -40,7 +43,6 @@ cursor.executemany(
 
 conn.commit()
 
-
 print("\nBooks published after 1990:")
 
 cursor.execute("SELECT title, author FROM books WHERE year > 1990")
@@ -49,3 +51,5 @@ results = cursor.fetchall()
 
 for book in results:
     print(book[0], "-", book[1])
+
+conn.close() 
