@@ -21,7 +21,7 @@ cursor.execute("""
 cursor.execute(
 "INSERT INTO books VALUES (?, ?, ?, ?, ?, ?, ?,)"
 (1, "The Hobbit", "J.R.R. Tolkien", 1937, "Fantasy", 4, 5)
-
+)
 
 books = [
     (2, "Pride and Prejudice", "Jane Austen", 1813, "Fiction", 3, 5),
