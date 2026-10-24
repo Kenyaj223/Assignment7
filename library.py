@@ -1,7 +1,5 @@
 # library database program
 
-# library database program
-
 import sqlite3
 
 conn = sqlite3.connect("library.db")
@@ -46,14 +44,10 @@ conn.commit()
 print("\nBooks published after 1990:")
 
 cursor.execute("SELECT title, author FROM books WHERE year > 1990")
-
 results = cursor.fetchall()
 
 for book in results:
     print(book[0], "-", book[1])
-
-conn.close() 
-
 
 
 print("\nFiction books with more than 2 copies:")
@@ -61,8 +55,12 @@ print("\nFiction books with more than 2 copies:")
 cursor.execute(
     "SELECT title FROM books WHERE genre = ? AND copies > ?",
     ("Fiction", 2)
-) 
+)
 
+results = cursor.fetchall()
+
+for book in results:
+    print(book[0])
 
 
 print("\nBooks published before 1900 OR rated 5:")
@@ -78,13 +76,6 @@ for book in results:
     print(book[0])
 
 
-results = cursor.fetchall()
-
-for book in results:
-    print(book[0])
-
-
-
 print("\nBooks NOT in the Mystery genre:")
 
 cursor.execute(
@@ -98,7 +89,6 @@ for book in results:
     print(book[0])
 
 
-
 print("\nBooks in Science or History:")
 
 cursor.execute(
@@ -110,6 +100,7 @@ results = cursor.fetchall()
 
 for book in results:
     print(book[0])
+
 
 letter = input("\nEnter a letter to search author names: ")
 
@@ -126,7 +117,6 @@ for author in results:
     print(author[0])
 
 
-
 print("\nBooks with no rating:")
 
 cursor.execute("SELECT title FROM books WHERE rating IS NULL")
@@ -135,4 +125,5 @@ results = cursor.fetchall()
 
 for book in results:
     print(book[0])
+
 conn.close()
