@@ -1,0 +1,101 @@
+
+import sqlite3
+
+conn = sqlite3.connect("StudentRecords.db")
+cursor = conn.cursor()
+
+# Remove the old table
+cursor.execute("DROP TABLE IF EXISTS StudentRecords")
+
+# Create the table
+cursor.execute("""
+CREATE TABLE StudentRecords (
+    ID INTEGER PRIMARY KEY,
+    Name TEXT NOT NULL,
+    Age INTEGER,
+    Major TEXT NOT NULL
+)
+""")
+
+# Add five starting students
+students = [
+    (1, "Alex", 20, "Nursing"),
+    (2, "Jordan", 21, "Biology"),
+    (3, "Taylor", 19, "Computer Science"),
+    (4, "Morgan", 22, "Psychology"),
+    (5, "Casey", 20, "History")
+]
+
+cursor.executemany(
+    "INSERT INTO StudentRecords VALUES (?, ?, ?, ?)",
+    students
+)
+
+# Print each student's name, age, and major
+cursor.execute("SELECT Name, Age, Major FROM StudentRecords")
+results = cursor.fetchall()
+
+print("Student Records:")
+
+for student in results:
+    print(student[0], student[1], student[2])
+
+# Ask whether to add a new student
+answer = input("Do you want to add a new student? (yes/no): ").lower().strip()
+
+while answer != "yes" and answer != "no":
+    print("Please enter yes or no.")
+    answer = input("Do you want to add a new student? (yes/no): ").lower().strip()
+
+if answer == "yes":
+    # Ask for the student's name
+    name = input("Enter the student's name: ").strip()
+
+    while name == "":
+        print("Name cannot be empty.")
+        name = input("Enter the student's name: ").strip()
+
+    # Ask for the student's age
+    age_text = input("Enter the student's age: ").strip()
+    age_valid = False
+
+    while age_valid == False:
+        try:
+            age = int(age_text)
+
+            if age > 0:
+                age_valid = True
+            else:
+                print("Age must be a positive whole number.")
+                age_text = input("Enter the student's age: ").strip()
+
+        except ValueError:
+            print("Please enter a whole number.")
+            age_text = input("Enter the student's age: ").strip()
+
+    # Ask for the student's major
+    major = input("Enter the student's major: ").strip()
+
+    while major == "":
+        print("Major cannot be empty.")
+        major = input("Enter the student's major: ").strip()
+
+    # Find an unused ID
+    cursor.execute("SELECT MAX(ID) FROM StudentRecords")
+    result = cursor.fetchone()
+
+    new_id = result[0] + 1
+
+    # Insert the new student
+    cursor.execute(
+        "INSERT INTO StudentRecords VALUES (?, ?, ?, ?)",
+        (new_id, name, age, major)
+    )
+
+    # Save the change
+    conn.commit()
+
+    print("Student added successfully.")
+
+# Close the database connection
+conn.close()
