@@ -61,6 +61,15 @@ print("\nFiction books with more than 2 copies:")
 cursor.execute(
     "SELECT title FROM books WHERE genre = ? AND copies > ?",
     ("Fiction", 2)
+) 
+
+
+
+print("\nBooks published before 1900 OR rated 5:")
+
+cursor.execute(
+    "SELECT title FROM books WHERE year < ? OR rating = ?",
+    (1900, 5)
 )
 
 results = cursor.fetchall()
@@ -68,3 +77,62 @@ results = cursor.fetchall()
 for book in results:
     print(book[0])
 
+
+results = cursor.fetchall()
+
+for book in results:
+    print(book[0])
+
+
+
+print("\nBooks NOT in the Mystery genre:")
+
+cursor.execute(
+    "SELECT title FROM books WHERE NOT genre = ?",
+    ("Mystery",)
+)
+
+results = cursor.fetchall()
+
+for book in results:
+    print(book[0])
+
+
+
+print("\nBooks in Science or History:")
+
+cursor.execute(
+    "SELECT title FROM books WHERE genre IN (?, ?)",
+    ("Science", "History")
+)
+
+results = cursor.fetchall()
+
+for book in results:
+    print(book[0])
+
+letter = input("\nEnter a letter to search author names: ")
+
+print("\nAuthors whose names start with " + letter + ":")
+
+cursor.execute(
+    "SELECT author FROM books WHERE author LIKE ?",
+    (letter + "%",)
+)
+
+results = cursor.fetchall()
+
+for author in results:
+    print(author[0])
+
+
+
+print("\nBooks with no rating:")
+
+cursor.execute("SELECT title FROM books WHERE rating IS NULL")
+
+results = cursor.fetchall()
+
+for book in results:
+    print(book[0])
+conn.close()
